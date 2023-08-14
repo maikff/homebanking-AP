@@ -9,11 +9,10 @@ import static java.util.stream.Collectors.toSet;
 
 public class ClientDTO {
     private Long id;
-    Set<AccountDTO> accounts = new HashSet<>();
     private String firstName;
     private String lastName;
     private String email;
-
+    Set<AccountDTO> accounts = new HashSet<>();
 
     public ClientDTO() {
     }
@@ -22,17 +21,16 @@ public class ClientDTO {
 
         this.id = client.getId();
 
-        this.accounts = client.getAccounts()
-                .stream()
-                .map(account -> new AccountDTO(account))
-                .collect(toSet());
-
         this.firstName = client.getFirstName();
 
         this.lastName = client.getLastName();
 
         this.email = client.getEmail();
 
+        this.accounts = client.getAccounts()
+                .stream()
+                .map(AccountDTO::new)
+                .collect(toSet());
     }
 
 
@@ -52,4 +50,7 @@ public class ClientDTO {
         return email;
     }
 
+    public Set<AccountDTO> getAccounts() {
+        return accounts;
+    }
 }
