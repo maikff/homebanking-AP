@@ -1,7 +1,7 @@
 package com.ap.homebanking.controllers;
 
-import com.ap.homebanking.dtos.ClientDTO;
-import com.ap.homebanking.repositories.ClientRepository;
+import com.ap.homebanking.dtos.AccountDTO;
+import com.ap.homebanking.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,23 +13,23 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api")
-public class ClientController {
+public class AccountController {
     @Autowired
-    private ClientRepository clientRepository;
+    private AccountRepository accountRepository;
 
-    @RequestMapping("/clients")
-    public List<ClientDTO> getClients(){
-        return clientRepository
+    @RequestMapping("/accounts")
+    public List<AccountDTO> getAccounts(){
+        return accountRepository
                 .findAll()
                 .stream()
-                .map(ClientDTO::new)
+                .map(AccountDTO::new)
                 .collect(toList());
     }
 
-    @RequestMapping("/clients/{id}")
-    public ClientDTO getClient(@PathVariable Long id){
-        return clientRepository.findById(id)
-                .map(ClientDTO::new)/*client -> new ClientDTO(client)*/
+    @RequestMapping("/accounts/{id}")
+    public AccountDTO getAccount(@PathVariable Long id){
+        return accountRepository.findById(id)
+                .map(AccountDTO::new)
                 .orElse(null);
     }
 }
