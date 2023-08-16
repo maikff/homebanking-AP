@@ -19,7 +19,7 @@ public class HomebankingApplication {
 	}
 
 	@Bean
-	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository){
+	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args -> {
             //clientRepository.save(new Client("Melba", "Morel", "melba@mindhub.com"));
             // clientRepository.save(new Client("Jaime", "Pereira", "jaime@mindhub.com"));
@@ -51,6 +51,10 @@ public class HomebankingApplication {
 			ClientLoan clientLoan3= new ClientLoan(100000,24);
 			ClientLoan clientLoan4 = new ClientLoan(200000,36);
 
+			Card card1 = new Card(client1.toString(),CardType.DEBIT,CardColor.GOLD,123456789,123,LocalDate.now(),LocalDate.now().plusYears(5));
+			Card card2 = new Card(client1.toString(),CardType.CREDIT,CardColor.TITANIUM,987654321,321,LocalDate.now(),LocalDate.now().plusYears(5));
+			Card card3 = new Card(client2.toString(),CardType.CREDIT,CardColor.SILVER,234567891,231,LocalDate.now(),LocalDate.now().plusYears(5));
+
 			clientRepository.save(client1);
 			clientRepository.save(client2);
 
@@ -66,6 +70,10 @@ public class HomebankingApplication {
 			clientLoanRepository.save(clientLoan2);
 			clientLoanRepository.save(clientLoan3);
 			clientLoanRepository.save(clientLoan4);
+
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			cardRepository.save(card3);
 
 			account1.addTransaction(transaction1);
 			account1.addTransaction(transaction2);
@@ -89,7 +97,9 @@ public class HomebankingApplication {
 			client2.addClientLoan(clientLoan3);
 			client2.addClientLoan(clientLoan4);
 
-
+			client1.addCard(card1);
+			client1.addCard(card2);
+			client2.addCard(card3);
 
 			transactionRepository.save(transaction1);
 			transactionRepository.save(transaction2);
@@ -117,6 +127,10 @@ public class HomebankingApplication {
 			loanRepository.save(loan1);
 			loanRepository.save(loan2);
 			loanRepository.save(loan3);
+
+			cardRepository.save(card1);
+			cardRepository.save(card2);
+			cardRepository.save(card3);
 		});
 	}
 }
