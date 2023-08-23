@@ -20,7 +20,7 @@ public class ClientLoan {
     @JoinColumn(name = "loan_id")
     private Loan loan;
 
-    public ClientLoan(){ }
+    public ClientLoan(){}
     public ClientLoan(double amount, int payments){
         this.amount = amount;
         this.payments = payments;

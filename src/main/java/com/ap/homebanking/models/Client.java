@@ -18,20 +18,22 @@ public class Client {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
 
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    Set<Account> accounts = new HashSet<>();
+    private Set<Account> accounts = new HashSet<>();
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    Set<ClientLoan> clientLoans = new HashSet<>();
+    private Set<ClientLoan> clientLoans = new HashSet<>();
     @OneToMany(mappedBy = "client", fetch = FetchType.EAGER)
-    Set<Card> cards = new HashSet<>();
+    private Set<Card> cards = new HashSet<>();
 
-    public Client() { }
+    public Client() {}
 
-    public Client(String first, String last, String email) {
+    public Client(String first, String last, String email, String password) {
         this.firstName = first;
         this.lastName = last;
         this.email = email;
+        this.password = password;
     }
 
     public long getId() {
@@ -53,12 +55,21 @@ public class Client {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String toString() {
@@ -73,15 +84,18 @@ public class Client {
         account.setClient(this);
         accounts.add(account);
     }
-    public void addClientLoan(ClientLoan clientLoan){
+
+    public void addClientLoan(ClientLoan clientLoan) {
         clientLoan.setClient(this);
         clientLoans.add(clientLoan);
     }
+
     public void addCard(Card card) {
         card.setClient(this);
         cards.add(card);
     }
-    public List<Loan> getLoans(){
+
+    public List<Loan> getLoans() {
         return clientLoans.stream().map(ClientLoan::getLoan).collect(Collectors.toList());
     }
 

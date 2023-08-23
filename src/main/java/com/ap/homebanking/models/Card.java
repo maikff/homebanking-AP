@@ -24,7 +24,7 @@ public class Card {
     @JoinColumn(name = "client_id")
     private Client client;
 
-    public Card(){ }
+    public Card(){}
     public Card(String cardholder, CardType type, CardColor color, long number, int cvv, LocalDate fromDate, LocalDate thruDate){
         this.cardholder = cardholder;
         this.type = type;
