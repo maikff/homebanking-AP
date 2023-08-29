@@ -43,10 +43,10 @@ public class ClientController {
     @RequestMapping(path = "/clients", method = RequestMethod.POST)
     public ResponseEntity<Object> register(
 
-            @RequestParam String first, @RequestParam String lastName,
+            @RequestParam String firstName, @RequestParam String lastName,
             @RequestParam String email, @RequestParam String password) {
 
-        if (first.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
+        if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || password.isEmpty()) {
             return new ResponseEntity<>("Missing data", HttpStatus.FORBIDDEN);
         }
 
@@ -54,7 +54,7 @@ public class ClientController {
             return new ResponseEntity<>("Name already in use", HttpStatus.FORBIDDEN);
         }
 
-        clientRepository.save(new Client(first, lastName, email, passwordEncoder.encode(password)));
+        clientRepository.save(new Client(firstName, lastName, email, passwordEncoder.encode(password)));
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

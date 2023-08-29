@@ -11,7 +11,7 @@ public class CardDTO {
     private String cardholder;
     private CardType type;
     private CardColor color;
-    private long number;
+    private String number;
     private int cvv;
     private LocalDate fromDate;
     private LocalDate thruDate;
@@ -42,7 +42,7 @@ public class CardDTO {
         return color;
     }
 
-    public long getNumber() {
+    public String getNumber() {
         return number;
     }
 
