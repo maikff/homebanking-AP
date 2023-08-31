@@ -32,6 +32,8 @@ public class HomebankingApplication {
             Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("123456"));
 			Client client2 = new Client("Jaime", "Pereira", "jaime@mindhub.com", passwordEncoder.encode("123456"));
 
+			Client admin = new Client("Prudencio", "Varela", "admin@mindhubbank.com", passwordEncoder.encode("admin"));
+
 			Account account1 = new Account("VIN001", LocalDate.now(),5000);
 			Account account2 = new Account("VIN002", LocalDate.now().plusDays(1),7500);
 			Account account3 = new Account("VIN003", LocalDate.now().plusDays(3),55000);
@@ -62,6 +64,8 @@ public class HomebankingApplication {
 
 			clientRepository.save(client1);
 			clientRepository.save(client2);
+
+			clientRepository.save(admin);
 
 			accountRepository.save(account1);
 			accountRepository.save(account2);

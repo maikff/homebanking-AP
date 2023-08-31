@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -38,10 +40,50 @@ public class AccountController {
     }
 
     @RequestMapping("/accounts/{id}")
-    public AccountDTO getAccount(@PathVariable Long id){
-        return accountRepository.findById(id)
-                .map(AccountDTO::new)
-                .orElse(null);
+    public ResponseEntity<Object> getAccount(@PathVariable Long id, Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized, login required");
+        }
+
+        Optional<Account> accountOptional = accountRepository.findById(id);
+
+        if (!accountOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account with this ID not found");
+        }
+
+        Account account = accountOptional.get();
+
+        Client authenticadedClient = clientRepository.findByEmail(authentication.getName());
+
+        if (account.getClient().equals(authenticadedClient)) {
+            AccountDTO accountDTO = new AccountDTO(account);
+            return ResponseEntity.ok(accountDTO);
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this information.");
+        }
+    }
+
+    @RequestMapping(path = "/clients/current/accounts")
+    public ResponseEntity<Object> getAccounts(Authentication authentication) {
+
+        Client authenticatedClient = clientRepository.findByEmail(authentication.getName());
+
+        if (authenticatedClient == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized, login required");
+        }
+
+        List<Account> clientAccounts = accountRepository.findByClient(authenticatedClient);
+
+        if (clientAccounts == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No accounts found");
+        }
+
+        List<AccountDTO> accountDTOs = clientAccounts.stream()
+                .map(account -> new AccountDTO(account))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(accountDTOs);
     }
 
     @RequestMapping(path = "/clients/current/accounts", method = RequestMethod.POST)
