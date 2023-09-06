@@ -53,10 +53,10 @@ public class HomebankingApplication {
 			Loan loan2 = new Loan("Personal",100000,Arrays.asList(6, 12, 24));
 			Loan loan3 = new Loan("Automotive",300000,Arrays.asList(6, 12, 24, 36));
 
-			ClientLoan clientLoan1 = new ClientLoan(400000,60);
-			ClientLoan clientLoan2 = new ClientLoan(500000,12);
-			ClientLoan clientLoan3= new ClientLoan(100000,24);
-			ClientLoan clientLoan4 = new ClientLoan(200000,36);
+			ClientLoan clientLoan1 = new ClientLoan(client1, loan1, 60, 400000);
+			ClientLoan clientLoan2 = new ClientLoan(client1, loan2, 12, 500000);
+			ClientLoan clientLoan3 = new ClientLoan(client2, loan2, 24, 100000);
+			ClientLoan clientLoan4 = new ClientLoan(client2, loan3, 36, 200000);
 
 			Card card1 = new Card(client1.toString(),CardType.DEBIT,CardColor.GOLD,"123-456-789",123,LocalDate.now(),LocalDate.now().plusYears(5));
 			Card card2 = new Card(client1.toString(),CardType.CREDIT,CardColor.TITANIUM,"987-654-321",321,LocalDate.now(),LocalDate.now().plusYears(5));

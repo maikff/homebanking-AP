@@ -3,8 +3,8 @@ package com.ap.homebanking.controllers;
 import com.ap.homebanking.dtos.AccountDTO;
 import com.ap.homebanking.models.Account;
 import com.ap.homebanking.models.Client;
-import com.ap.homebanking.repositories.AccountRepository;
-import com.ap.homebanking.repositories.ClientRepository;
+import com.ap.homebanking.services.AccountService;
+import com.ap.homebanking.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,46 +18,33 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/api")
 public class AccountController {
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
     @Autowired
-    private ClientRepository clientRepository;
+    private ClientService clientService;
 
     @RequestMapping("/accounts")
     public List<AccountDTO> getAccounts(){
-        return accountRepository
-                .findAll()
-                .stream()
-                .map(AccountDTO::new)
-                .collect(toList());
+        return accountService.getListAccountDTO();
     }
 
     @RequestMapping("/accounts/{id}")
     public ResponseEntity<Object> getAccount(@PathVariable Long id, Authentication authentication) {
-
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized, login required");
         }
-
-        Optional<Account> accountOptional = accountRepository.findById(id);
-
-        if (!accountOptional.isPresent()) {
+        Optional<Account> accountOptional = accountService.getOptionalAccountById(id);
+        if (accountOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Account with this ID not found");
         }
-
         Account account = accountOptional.get();
-
-        Client authenticadedClient = clientRepository.findByEmail(authentication.getName());
-
+        Client authenticadedClient = clientService.getClientByEmail(authentication.getName());
         if (account.getClient().equals(authenticadedClient)) {
-            AccountDTO accountDTO = new AccountDTO(account);
+            AccountDTO accountDTO = accountService.getAccountDTO(account);
             return ResponseEntity.ok(accountDTO);
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You are not authorized to access this information.");
@@ -66,32 +53,23 @@ public class AccountController {
 
     @RequestMapping(path = "/clients/current/accounts")
     public ResponseEntity<Object> getAccounts(Authentication authentication) {
-
-        Client authenticatedClient = clientRepository.findByEmail(authentication.getName());
-
+        Client authenticatedClient = clientService.getClientByEmail(authentication.getName());
         if (authenticatedClient == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized, login required");
         }
-
-        List<Account> clientAccounts = accountRepository.findByClient(authenticatedClient);
-
+        List<Account> clientAccounts = accountService.getAccountsByClient(authenticatedClient);
         if (clientAccounts == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No accounts found");
         }
-
-        List<AccountDTO> accountDTOs = clientAccounts.stream()
-                .map(account -> new AccountDTO(account))
-                .collect(Collectors.toList());
-
+        List<AccountDTO> accountDTOs = accountService.mapToAccountDTOList(clientAccounts);
         return ResponseEntity.ok(accountDTOs);
     }
 
     @RequestMapping(path = "/clients/current/accounts", method = RequestMethod.POST)
     public ResponseEntity<Object> createAccount(Authentication authentication) {
-        Client authenticatedClient = clientRepository.findByEmail(authentication.getName());
-
+        Client authenticatedClient = clientService.getClientByEmail(authentication.getName());
         if (authenticatedClient != null) {
-            List<Account> accounts = accountRepository.findByClient(authenticatedClient);
+            List<Account> accounts = accountService.getAccountsByClient(authenticatedClient);
             if (accounts.size() >= 3) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("You can only have up to three accounts.");
             }
@@ -103,14 +81,13 @@ public class AccountController {
                 int numRandom = random.nextInt(900000) + 100000;
                 number = "VIN-" + numRandom;
                 String finalNumber = number;
-                accountNumberExists = clientRepository.findAll().stream()
+                accountNumberExists = clientService.getClientsList().stream()
                         .anyMatch(client -> client.getAccounts().stream()
                                 .anyMatch(account -> account.getNumber().equals(finalNumber)));
-
                 if (!accountNumberExists) {
-                    Account newAccount = new Account(finalNumber, LocalDate.now(), 0.0);
+                    Account newAccount = accountService.createAccount(finalNumber, LocalDate.now(), 0.0);
                     authenticatedClient.addAccount(newAccount);
-                    accountRepository.save(newAccount);
+                    accountService.saveAccount(newAccount);
                 }
             } while (accountNumberExists);
             return ResponseEntity.status(HttpStatus.CREATED).body("Account created");
