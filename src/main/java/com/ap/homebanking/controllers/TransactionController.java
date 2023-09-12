@@ -24,13 +24,13 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class TransactionController {
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
-    ClientService clientService;
+    private ClientService clientService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @Transactional
     @RequestMapping(path = "/transactions", method = RequestMethod.POST)

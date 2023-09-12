@@ -23,19 +23,19 @@ import java.util.Optional;
 public class LoanController {
 
     @Autowired
-    LoanService loanService;
+    private LoanService loanService;
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
-    ClientService clientService;
+    private ClientService clientService;
 
     @Autowired
-    ClientLoanService clientLoanService;
+    private ClientLoanService clientLoanService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
 
     @RequestMapping(path = "/loans")

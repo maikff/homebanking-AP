@@ -26,7 +26,7 @@ public class HomebankingApplication {
 	@Bean
 	public CommandLineRunner initData(ClientRepository clientRepository, AccountRepository accountRepository, TransactionRepository transactionRepository, LoanRepository loanRepository, ClientLoanRepository clientLoanRepository, CardRepository cardRepository){
 		return (args -> {
-            //clientRepository.save(new Client("Melba", "Morel", "melba@mindhub.com"));
+            /*//clientRepository.save(new Client("Melba", "Morel", "melba@mindhub.com"));
             // clientRepository.save(new Client("Jaime", "Pereira", "jaime@mindhub.com"));
 
             Client client1 = new Client("Melba", "Morel", "melba@mindhub.com", passwordEncoder.encode("123456"));
@@ -45,15 +45,15 @@ public class HomebankingApplication {
 			Transaction transaction5 = new Transaction(TransactionType.DEBIT,2000,"Transporte", LocalDateTime.now());
 			Transaction transaction6 = new Transaction(TransactionType.CREDIT,56000,"Comida", LocalDateTime.now());
 
-			/*List<Integer> payments1 = Arrays.asList(12, 24, 36, 48, 60);
-			List<Integer> payments2 = Arrays.asList(6, 12, 24);
-			List<Integer> payments3 = Arrays.asList(6, 12, 24, 36);*/
+			//List<Integer> payments1 = Arrays.asList(12, 24, 36, 48, 60);
+			//List<Integer> payments2 = Arrays.asList(6, 12, 24);
+			//List<Integer> payments3 = Arrays.asList(6, 12, 24, 36);
 
 			Loan loan1 = new Loan("Mortgage",50000,Arrays.asList(12, 24, 36, 48, 60));
 			Loan loan2 = new Loan("Personal",100000,Arrays.asList(6, 12, 24));
-			Loan loan3 = new Loan("Automotive",300000,Arrays.asList(6, 12, 24, 36));
+			Loan loan3 = new Loan("Automotive",300000,Arrays.asList(6, 12, 24, 36));*/
 
-			ClientLoan clientLoan1 = new ClientLoan(client1, loan1, 60, 400000);
+			/*ClientLoan clientLoan1 = new ClientLoan(client1, loan1, 60, 400000);
 			ClientLoan clientLoan2 = new ClientLoan(client1, loan2, 12, 500000);
 			ClientLoan clientLoan3 = new ClientLoan(client2, loan2, 24, 100000);
 			ClientLoan clientLoan4 = new ClientLoan(client2, loan3, 36, 200000);
@@ -139,7 +139,7 @@ public class HomebankingApplication {
 
 			cardRepository.save(card1);
 			cardRepository.save(card2);
-			cardRepository.save(card3);
+			cardRepository.save(card3);*/
 		});
 	}
 }

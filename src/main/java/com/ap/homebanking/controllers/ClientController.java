@@ -21,7 +21,7 @@ import java.util.Random;
 @RequestMapping("/api")
 public class ClientController {
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
